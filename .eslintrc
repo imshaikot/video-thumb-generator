@@ -1,0 +1,28 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info"
+        ]
+      }
+    ],
+    "no-underscore-dangle": [
+      "off"
+    ],
+    "no-param-reassign": [
+      "off"
+    ],
+    "import/no-unresolved": [
+      "off"
+    ]
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}
