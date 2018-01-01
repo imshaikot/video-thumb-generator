@@ -1,3 +1,5 @@
+import Canvas from './canvas';
+
 export default class Video {
   constructor(uri) {
     this.node = document.createElement('video');
