@@ -1,7 +1,9 @@
+import Video from './video';
+
 const OBJECT_URL_TYPE = 'objectURL';
 const DATA_URL_TYPE = 'dataURL';
 
-export default class VideoToThumb {
+class VideoToThumb {
   constructor(resource) {
     this.resource = resource;
   }
@@ -13,6 +15,24 @@ export default class VideoToThumb {
       } else if (typeof this.resource !== 'string') {
         reject('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
       }
+      const video = new Video(this.resource);
+      return video
+        .initialize()
+        .then(() => {
+          return Promise.all(positions.map(each => {
+            console.log('from default call', each);
+            return video.generateThumb(each)}))
+          .then(() => {
+            resolve(video.thumbs.map(thumb => {
+              return URL.createObjectURL(thumb)
+            }));
+          });
+        })
+        .catch(event => console.error(`There's an error`, event));
     });
   }
 }
+
+window.VideoToThumb = VideoToThumb;
+
+export default VideoToThumb;

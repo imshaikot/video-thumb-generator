@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    const onFileSelect = function(target) {
+      const videoToThumb = new VideoToThumb(target.files[0]);
+      videoToThumb.load([188, 55, 388, 480])
+      .then(urls => {
+        console.log(urls);
+        urls.forEach(each => {
+          const img = new Image();
+          img.src = each;
+          document.getElementById('thumb-area').appendChild(img);
+        });
+      });
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Video Thumb Generator</title>
 </head>
 <body>
-  <h1>Hello World!</h1>
+  <input type="file" onchange="onFileSelect(this)" />
+  <div id="thumb-area"></div>
 </body>
 </html>
