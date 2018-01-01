@@ -3,8 +3,8 @@
 <head>
   <script>
     const onFileSelect = function(target) {
-      const videoToThumb = new VideoToThumb(target.files[0]);
-      videoToThumb.load([188, 55, 388, 480])
+      const videoToThumb = new VideoToThumb(target.files[0]); // ('https://cdn.airvuz.com/drone-video/e98303307ef68d8085b2ee578310717e/e98303307ef68d8085b2ee578310717e-480p.mp4'); // (target.files[0]);
+      videoToThumb.load([30, 440, 265, 821, 12])
       .then(urls => {
         console.log(urls);
         urls.forEach(each => {

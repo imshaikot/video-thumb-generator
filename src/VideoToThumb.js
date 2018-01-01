@@ -8,7 +8,8 @@ class VideoToThumb {
     this.resource = resource;
   }
 
-  load(positions = [], returnType = OBJECT_URL_TYPE) {
+  load(skips = [], returnType = OBJECT_URL_TYPE) {
+    const positions = [...skips];
     return new Promise((resolve, reject) => {
       if (Blob && this.resource instanceof Blob) {
         this.resource = URL.createObjectURL(this.resource);
@@ -16,17 +17,30 @@ class VideoToThumb {
         reject('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
       }
       const video = new Video(this.resource);
+      const thumbs = [];
       return video
         .initialize()
         .then(() => {
-          return Promise.all(positions.map(each => {
-            return video.generateThumb(each)}))
-          .then(() => {
-            video.destroy();
-            resolve(video.thumbs.map(thumb => {
-              return URL.createObjectURL(thumb)
-            }));
-          });
+          if (!positions.length) return resolve([]);
+
+          const reverseOrder = () => {
+            positions.shift();
+            if (!positions.length) return resolve(video.thumbs.map(thumb => {
+                return URL.createObjectURL(thumb);
+              }));
+            // console.log(video.thumbs);
+              return video.generateThumb(positions[0]).then(reverseOrder);
+          };
+
+          video.generateThumb(positions[0]).then(reverseOrder);
+          // return Promise.all(positions.map(each => {
+          //   return video.generateThumb(each)}))
+          // .then(() => {
+          //   video.destroy();
+          //   resolve(video.thumbs.map(thumb => {
+          //     return URL.createObjectURL(thumb)
+          //   }));
+          // });
         })
         .catch(event => console.error(`There's an error`, event));
     });

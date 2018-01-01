@@ -31,7 +31,6 @@ export default class Video {
       this.node.addEventListener('suspend', reject);
       this.node.addEventListener('abort', reject);
       const onSeeked = () => {
-        console.log('from seek event', position);
         this.node.removeEventListener('suspend', reject);
         this.node.removeEventListener('abort', reject);
         this.node.removeEventListener('onSeeked', onSeeked);
