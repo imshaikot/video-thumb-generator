@@ -21,7 +21,6 @@ class Canvas {
       this.node.width = w;
       this.node.height = h;
       this.node.getContext('2d').drawImage(videoNode, 0, 0, w, h);
-      console.log(videoNode.currentTime)
       this.node.toBlob(blob => resolve(blob));
     });
   }

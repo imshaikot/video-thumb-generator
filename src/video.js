@@ -13,7 +13,6 @@ export default class Video {
 
   initialize() {
     return new Promise((resolve, reject) => {
-      document.body.appendChild(this.node);
       //this.node.addEventListener('error', reject);
       //this.node.addEventListener('suspend', reject);
       this.node.addEventListener('abort', reject);
@@ -44,5 +43,9 @@ export default class Video {
       this.node.addEventListener('seeked', onSeeked);
       this.node.currentTime = Number(position);
     });
+  }
+
+  destroy() {
+    return this.node.remove();
   }
 }

@@ -20,9 +20,9 @@ class VideoToThumb {
         .initialize()
         .then(() => {
           return Promise.all(positions.map(each => {
-            console.log('from default call', each);
             return video.generateThumb(each)}))
           .then(() => {
+            video.destroy();
             resolve(video.thumbs.map(thumb => {
               return URL.createObjectURL(thumb)
             }));
