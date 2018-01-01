@@ -33,7 +33,7 @@ export default class Video {
       const onSeeked = () => {
         this.node.removeEventListener('suspend', reject);
         this.node.removeEventListener('abort', reject);
-        this.node.removeEventListener('onSeeked', onSeeked);
+        this.node.removeEventListener('seeked', onSeeked);
         Canvas.capture(this.node, scale).then(data => {
           this.thumbs.push(data);
           resolve();
