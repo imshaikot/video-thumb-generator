@@ -2,11 +2,20 @@
 <html lang="en">
 <head>
   <script>
-    startCapture = function() {
+    var tragetedFile = null;
+    var onFileSelect = function(target) {
+      if (target.files.length) {
+        tragetedFile = target.files[0];
+        window['chokra'].innerText = target.files[0].name.length > 20 ? target.files[0].name.substr(0, 20) +'...' : target.files[0].name;
+        var editor = document.getElementById('editor');
+        editor.style.opacity = '1';
+        editor.style.display = 'block';
+      }
+    }
+    var startCapture = function() {
       var thumbArea = window['thumb-area'];
       thumbArea.innerHTML = '';
-      var file = document.getElementById('file');
-      if (!file.files.length) {
+      if (!tragetedFile) {
         thumbArea.innerHTML = '<p class="error">Error: No video file found. Plaese choose a file.</p>';
         return;
       }
@@ -14,13 +23,17 @@
       var type = window['type-input'].value || 'objectURL';
       var xy = window['xy-input'].value ? window['xy-input'].value.split('x').map(function(each) { return parseInt(each)}) : [0, 0];
       var size = window['size-input'].value ? window['size-input'].value.split('x').map(function(each) { return parseInt(each)}) : [320, 240];
-      var videoToThumb = new VideoToThumb(file.files[0]);
+      var videoToThumb = new VideoToThumb(tragetedFile);
       videoToThumb
       .load()
       .type(type)
       .positions(positions)
       .xy(xy)
       .done(function(urls) {
+        var editor = document.getElementById('editor');
+        editor.style.opacity = '0';
+        editor.style.display = 'none';
+
         urls.forEach(function(element, index) {
           var el = document.createElement('div');
           el.classList.add('img-box');
@@ -186,8 +199,8 @@
   <div class="main-box">
     <h3 style="margin-bottom: 15px;">Please choose a media file to start capturing snapshots of video frame.</h3>
     <p style="margin-bottom: 20px; font-size: 13px;">You don't have to upload the video just select a file from your local system</p>
-    <button style="width: 300px; background-color: rgb(0, 188, 212);" class="btn">
-      Select a Video track
+    <button id="rev-btn" style="width: 300px; background-color: rgb(0, 188, 212);" class="btn">
+      <p id="chokra">Select a Video track<p>
       <input class="file-input" type="file" id="file" onchange="onFileSelect(this)" />
     </button>
     <div id="editor">
