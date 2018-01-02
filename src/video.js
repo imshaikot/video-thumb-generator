@@ -28,6 +28,7 @@ export default class Video {
 
   generateThumb(position = 1, scale = 0.25) {
     return new Promise((resolve, reject) => {
+      if (position > this.node.duration) return resolve();
       this.node.addEventListener('suspend', reject);
       this.node.addEventListener('abort', reject);
       const onSeeked = () => {
