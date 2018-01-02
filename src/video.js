@@ -12,8 +12,7 @@ export default class Video {
   }
 
   initialize(configs) {
-    this.node.width = configs.size[0];
-    this.node.height = configs.size[1];
+    [this.node.width, this.node.height] = configs.size;
     this.configs = configs;
     return new Promise((resolve, reject) => {
       const MediaError = (event) => {
@@ -22,7 +21,7 @@ export default class Video {
           error: event,
         };
         reject(err);
-      }
+      };
 
       this.node.addEventListener('error', MediaError);
       this.node.addEventListener('abort', MediaError);
@@ -44,20 +43,21 @@ export default class Video {
           error: event,
         };
         reject(err);
-      }
+      };
       this.node.addEventListener('suspend', onMediaError);
       this.node.addEventListener('abort', onMediaError);
       const onSeeked = () => {
         this.node.removeEventListener('suspend', onMediaError);
         this.node.removeEventListener('abort', onMediaError);
         this.node.removeEventListener('seeked', onSeeked);
-        Canvas.capture(this.node, this.configs).then(data => {
+        Canvas.capture(this.node, this.configs).then((data) => {
           this.thumbs.push(data);
           resolve();
-        })
+        }).catch(reject);
       };
       this.node.addEventListener('seeked', onSeeked);
       this.node.currentTime = Number(position);
+      return null;
     });
   }
 

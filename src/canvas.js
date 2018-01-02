@@ -30,8 +30,12 @@ class Canvas {
         this.node.toBlob(blob => resolve(blob));
       } else if (configs.returnType === DATA_URL_TYPE) {
         resolve(this.node.toDataURL());
-      } else { reject({type: 'Canvas_Error',
-        message: `type must be between ${OBJECT_URL_TYPE} or ${DATA_URL_TYPE} but found ${configs.returnType}`});
+      } else {
+        const err = {
+          type: 'Canvas_Error',
+          message: `type must be between ${OBJECT_URL_TYPE} or ${DATA_URL_TYPE} but found ${configs.returnType}`,
+        };
+        reject(err);
       }
     });
   }

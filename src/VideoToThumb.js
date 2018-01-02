@@ -3,7 +3,6 @@ import Video from './video';
 const _PRIVATE = new WeakMap();
 
 const OBJECT_URL_TYPE = 'objectURL';
-const DATA_URL_TYPE = 'base64';
 
 class VideoToThumb {
   /**
@@ -71,20 +70,21 @@ class VideoToThumb {
     const video = new Video(_PRIVATE.get(this).resource);
     try {
       video
-      .initialize(_PRIVATE.get(this).__settings)
-      .then(() => {
-        if (!positions.length) return successCB([]);
-        const reverseOrder = () => {
-          positions.shift();
-          if (!positions.length) return successCB(video.thumbs.map(thumb => {
-              return (_PRIVATE.get(this).__settings.returnType === OBJECT_URL_TYPE ?
-               URL.createObjectURL(thumb) : thumb);
-            }));
+        .initialize(_PRIVATE.get(this).__settings)
+        .then(() => {
+          if (!positions.length) return successCB([]);
+          const reverseOrder = () => {
+            positions.shift();
+            if (!positions.length) {
+              return successCB(video.thumbs.map(thumb => (_PRIVATE.get(this)
+                .__settings.returnType === OBJECT_URL_TYPE ?
+                URL.createObjectURL(thumb) : thumb)));
+            }
             return video.getSnaps(positions[0])
-            .then(reverseOrder);
-        };
-        video.getSnaps(positions[0]).then(reverseOrder);
-      }).catch(errorCB);
+              .then(reverseOrder);
+          };
+          return video.getSnaps(positions[0]).then(reverseOrder);
+        }).catch(errorCB);
     } catch (err) {
       errorCB(err);
     }

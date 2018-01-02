@@ -4,7 +4,7 @@
   "description": "Generate thumbnails/screenshots from video (either from valid remote video URL or from local filesystem) on your HTML5 based webpage",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/eslint ./src/",
     "start": "webpack-dev-server"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "eslint": "^4.14.0",
     "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
     "html-webpack-plugin": "^2.30.1",

@@ -11,6 +11,9 @@
         ]
       }
     ],
+    "symbol-description": [
+      "off"
+    ],
     "no-underscore-dangle": [
       "off"
     ],
