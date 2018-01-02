@@ -5,7 +5,12 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint ./src/",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "postpublish": "git push origin master --follow-tags",
+    "minor": "npm version minor && npm publish",
+    "major": "npm version major && npm publish",
+    "patch": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
@@ -18,6 +23,9 @@
     "canvas",
     "png",
     "screenshots"
+  ],
+  "files": [
+    "lib"
   ],
   "author": "Shariar Shaikot",
   "license": "MIT",
