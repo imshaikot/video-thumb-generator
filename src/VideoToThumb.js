@@ -8,42 +8,65 @@ class VideoToThumb {
     this.resource = resource;
   }
 
-  load(skips = [], returnType = OBJECT_URL_TYPE) {
-    const positions = [...skips];
-    return new Promise((resolve, reject) => {
-      if (Blob && this.resource instanceof Blob) {
-        this.resource = URL.createObjectURL(this.resource);
-      } else if (typeof this.resource !== 'string') {
-        reject('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
+
+  prepareURL() {
+    if (Blob && this.resource instanceof Blob) {
+      this.resource = URL.createObjectURL(this.resource);
+    } else if (typeof this.resource !== 'string') {
+      throw new Error('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
+    }
+  }
+
+  load() {
+    this.prepareURL();
+    const video = new Video(this.resource);
+    const thumbs = [];
+    const context = {
+      __settings: {
+        xy: [0, 0],
+        size: [320, 240],
+        returnType: OBJECT_URL_TYPE,
+        skips: [0],
+      },
+      xy: (val = [0, 0]) => {
+        context.__settings.xy = val;
+        return context;
+      },
+      size: (val = [320, 240]) => {
+        context.__settings.size = val;
+        return this;
+      },
+      returnType: (val = OBJECT_URL_TYPE) => {
+        context.__settings.returnType = val;
+        return context;
+      },
+      positions: (val = [0]) => {
+        context.__settings.skips = val;
+        return context;
+      },
+      done: (successCB, errorCB) => {
+        const positions = [...context.__settings.skips];
+        try {
+          video
+          .initialize(context.__settings)
+          .then(() => {
+            if (!positions.length) return successCB([]);
+            const reverseOrder = () => {
+              positions.shift();
+              if (!positions.length) return successCB(video.thumbs.map(thumb => {
+                  return URL.createObjectURL(thumb);
+                }));
+                return video.generateThumb(positions[0]).then(reverseOrder);
+            };
+            video.generateThumb(positions[0]).then(reverseOrder);
+          });
+        } catch (err) {
+          errorCB(err);
+        }
+        return context;
       }
-      const video = new Video(this.resource);
-      const thumbs = [];
-      return video
-        .initialize()
-        .then(() => {
-          if (!positions.length) return resolve([]);
-
-          const reverseOrder = () => {
-            positions.shift();
-            if (!positions.length) return resolve(video.thumbs.map(thumb => {
-                return URL.createObjectURL(thumb);
-              }));
-            // console.log(video.thumbs);
-              return video.generateThumb(positions[0]).then(reverseOrder);
-          };
-
-          video.generateThumb(positions[0]).then(reverseOrder);
-          // return Promise.all(positions.map(each => {
-          //   return video.generateThumb(each)}))
-          // .then(() => {
-          //   video.destroy();
-          //   resolve(video.thumbs.map(thumb => {
-          //     return URL.createObjectURL(thumb)
-          //   }));
-          // });
-        })
-        .catch(event => console.error(`There's an error`, event));
-    });
+    };
+    return context;
   }
 }
 
