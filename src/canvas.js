@@ -23,7 +23,8 @@ class Canvas {
       this.node.width = w;
       this.node.height = h;
       this.node.getContext('2d').drawImage(videoNode, x, y, w, h);
-      this.node.toBlob(blob => resolve(blob));
+      if (configs.returnType === 'objectURL') this.node.toBlob(blob => resolve(blob));
+      if (configs.returnType === 'dataURL') resolve(this.node.toDataURL());
     });
   }
 }
