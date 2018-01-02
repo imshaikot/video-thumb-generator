@@ -11,12 +11,14 @@ export default class Video {
     this.thumbs = [];
   }
 
-  initialize() {
+  initialize(configs) {
+    this.node.width = configs.size[0];
+    this.node.height = configs.size[1];
+    this.configs = configs;
     return new Promise((resolve, reject) => {
       //this.node.addEventListener('error', reject);
       //this.node.addEventListener('suspend', reject);
       this.node.addEventListener('abort', reject);
-
       this.node.addEventListener('canplaythrough', () => {
         //this.node.removeEventListener('error', reject);
         //this.node.removeEventListener('suspend', reject);
@@ -26,7 +28,7 @@ export default class Video {
     });
   }
 
-  generateThumb(position = 1, scale = 0.25) {
+  generateThumb(position = 1) {
     return new Promise((resolve, reject) => {
       if (position > this.node.duration) return resolve();
       this.node.addEventListener('suspend', reject);
@@ -35,7 +37,7 @@ export default class Video {
         this.node.removeEventListener('suspend', reject);
         this.node.removeEventListener('abort', reject);
         this.node.removeEventListener('seeked', onSeeked);
-        Canvas.capture(this.node, scale).then(data => {
+        Canvas.capture(this.node, this.configs).then(data => {
           this.thumbs.push(data);
           resolve();
         });
