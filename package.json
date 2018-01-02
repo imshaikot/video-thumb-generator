@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/eslint ./src/",
     "start": "webpack-dev-server",
-    "build": "webpack",
+    "build": "babel ./src --stage 0 -d ./lib",
     "postpublish": "git push origin master --follow-tags",
     "minor": "npm version minor && npm publish",
     "major": "npm version major && npm publish",

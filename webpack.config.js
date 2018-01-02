@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/VideoToThumb.js',
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'lib'),
     filename: 'index.js',
