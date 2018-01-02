@@ -16,31 +16,45 @@ export default class Video {
     this.node.height = configs.size[1];
     this.configs = configs;
     return new Promise((resolve, reject) => {
-      //this.node.addEventListener('error', reject);
-      //this.node.addEventListener('suspend', reject);
-      this.node.addEventListener('abort', reject);
+      const MediaError = (event) => {
+        const err = {
+          type: `media_${event.type}`,
+          error: event,
+        };
+        reject(err);
+      }
+
+      this.node.addEventListener('error', MediaError);
+      this.node.addEventListener('abort', MediaError);
+
       this.node.addEventListener('canplaythrough', () => {
-        //this.node.removeEventListener('error', reject);
-        //this.node.removeEventListener('suspend', reject);
-        this.node.removeEventListener('abort', reject);
+        this.node.removeEventListener('error', MediaError);
+        this.node.removeEventListener('abort', MediaError);
         resolve();
       });
     });
   }
 
-  generateThumb(position = 1) {
+  getSnaps(position = 1) {
     return new Promise((resolve, reject) => {
       if (position > this.node.duration) return resolve();
-      this.node.addEventListener('suspend', reject);
-      this.node.addEventListener('abort', reject);
+      const onMediaError = (event) => {
+        const err = {
+          type: `media_${event.type}`,
+          error: event,
+        };
+        reject(err);
+      }
+      this.node.addEventListener('suspend', onMediaError);
+      this.node.addEventListener('abort', onMediaError);
       const onSeeked = () => {
-        this.node.removeEventListener('suspend', reject);
-        this.node.removeEventListener('abort', reject);
+        this.node.removeEventListener('suspend', onMediaError);
+        this.node.removeEventListener('abort', onMediaError);
         this.node.removeEventListener('seeked', onSeeked);
         Canvas.capture(this.node, this.configs).then(data => {
           this.thumbs.push(data);
           resolve();
-        });
+        })
       };
       this.node.addEventListener('seeked', onSeeked);
       this.node.currentTime = Number(position);

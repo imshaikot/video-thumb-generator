@@ -4,8 +4,9 @@
   <script>
     const onFileSelect = function(target) {
       console.log(target.files[0]);
-      const videoToThumb = new VideoToThumb(target.files[0]); // ('https://cdn.airvuz.com/drone-video/e98303307ef68d8085b2ee578310717e/e98303307ef68d8085b2ee578310717e-480p.mp4'); // (target.files[0]);
+      const videoToThumb = new VideoToThumb(target.files[0]);
       videoToThumb.load()
+      .type('base64')
       .positions([30, 440, 265, 100, 12])
       .done(urls => {
         console.log(urls);
@@ -14,7 +15,7 @@
           img.src = each;
           document.getElementById('thumb-area').appendChild(img);
         });
-      });
+      }, err => console.log(err));
     }
   </script>
   <meta charset="UTF-8">
@@ -23,7 +24,7 @@
   <title>Video Thumb Generator</title>
 </head>
 <body>
-  <input type="file" onchange="onFileSelect(this)" accept="video/x-matroska, video/*"/>
+  <input type="file" onchange="onFileSelect(this)" />
   <div id="thumb-area"></div>
 </body>
 </html>

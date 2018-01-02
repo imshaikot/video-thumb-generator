@@ -3,9 +3,12 @@ import Video from './video';
 const _PRIVATE = new WeakMap();
 
 const OBJECT_URL_TYPE = 'objectURL';
-const DATA_URL_TYPE = 'dataURL';
+const DATA_URL_TYPE = 'base64';
 
 class VideoToThumb {
+  /**
+   * @param {*} resource
+   */
   constructor(resource) {
     this.resource = resource;
     _PRIVATE.set(this, {
@@ -26,26 +29,43 @@ class VideoToThumb {
     });
   }
 
+  load() {
+    _PRIVATE.get(this).prepareURL();
+    return this;
+  }
+
+  /**
+   * @param {*} val
+   */
   xy(val = [0, 0]) {
     _PRIVATE.get(this).__settings.xy = val;
     return this;
   }
-
+  /**
+   * @param {*} val
+   */
   size(val = [320, 240]) {
     _PRIVATE.get(this).__settings.size = val;
     return this;
   }
-
+  /**
+   * @param {*} val
+   */
   type(val = OBJECT_URL_TYPE) {
     _PRIVATE.get(this).__settings.returnType = val;
     return this;
   }
-
+  /**
+   * @param {*} val
+   */
   positions(val = [0]) {
     _PRIVATE.get(this).__settings.skips = val;
     return this;
   }
-
+  /**
+   * @param {*} successCB
+   * @param {*} errorCB
+   */
   done(successCB, errorCB) {
     const positions = [..._PRIVATE.get(this).__settings.skips];
     const video = new Video(_PRIVATE.get(this).resource);
@@ -57,20 +77,17 @@ class VideoToThumb {
         const reverseOrder = () => {
           positions.shift();
           if (!positions.length) return successCB(video.thumbs.map(thumb => {
-              return URL.createObjectURL(thumb);
+              return (_PRIVATE.get(this).__settings.returnType === OBJECT_URL_TYPE ?
+               URL.createObjectURL(thumb) : thumb);
             }));
-            return video.generateThumb(positions[0]).then(reverseOrder);
+            return video.getSnaps(positions[0])
+            .then(reverseOrder);
         };
-        video.generateThumb(positions[0]).then(reverseOrder);
-      });
+        video.getSnaps(positions[0]).then(reverseOrder);
+      }).catch(errorCB);
     } catch (err) {
       errorCB(err);
     }
-    return this;
-  }
-
-  load() {
-    _PRIVATE.get(this).prepareURL();
     return this;
   }
 }

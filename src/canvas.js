@@ -1,6 +1,9 @@
 const singleton = Symbol();
 const singletonEnforcer = Symbol();
 
+const OBJECT_URL_TYPE = 'objectURL';
+const DATA_URL_TYPE = 'base64';
+
 class Canvas {
   constructor(enforcer) {
     if (enforcer !== singletonEnforcer) throw new Error('Cannot construct singleton');
@@ -15,7 +18,7 @@ class Canvas {
   }
 
   capture(videoNode, configs) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const w = configs.size[0];
       const h = configs.size[1];
       const x = configs.xy[0];
@@ -23,8 +26,13 @@ class Canvas {
       this.node.width = w;
       this.node.height = h;
       this.node.getContext('2d').drawImage(videoNode, x, y, w, h);
-      if (configs.returnType === 'objectURL') this.node.toBlob(blob => resolve(blob));
-      if (configs.returnType === 'dataURL') resolve(this.node.toDataURL());
+      if (configs.returnType === OBJECT_URL_TYPE) {
+        this.node.toBlob(blob => resolve(blob));
+      } else if (configs.returnType === DATA_URL_TYPE) {
+        resolve(this.node.toDataURL());
+      } else { reject({type: 'Canvas_Error',
+        message: `type must be between ${OBJECT_URL_TYPE} or ${DATA_URL_TYPE} but found ${configs.returnType}`});
+      }
     });
   }
 }
