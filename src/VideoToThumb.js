@@ -1,3 +1,4 @@
+import 'weakmap-polyfill';
 import Video from './video';
 
 const _PRIVATE = new WeakMap();
