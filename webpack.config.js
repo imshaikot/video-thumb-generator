@@ -4,9 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'lib'),
-    filename: 'index.js',
-    publicPath: '',
+    library: 'VideoToThumb',
+    libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['.js'],

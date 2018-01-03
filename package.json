@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/eslint ./src/",
     "start": "webpack-dev-server",
-    "build": "babel ./src --stage 0 -d ./lib",
+    "build": "babel ./src --stage 0 -d ./lib && webpack -p ./src/index.js ./umd/VideoToThumb.min.js",
     "postpublish": "git push origin master --follow-tags",
     "minor": "npm version minor && npm publish",
     "major": "npm version major && npm publish",
@@ -25,7 +25,8 @@
     "screenshots"
   ],
   "files": [
-    "lib"
+    "lib",
+    "umd"
   ],
   "author": "Shariar Shaikot",
   "license": "MIT",
