@@ -6,6 +6,14 @@
 <p align="center">
   <a href="https://www.npmjs.org/package/video-thumb-generator"><img src="https://img.shields.io/npm/v/video-thumb-generator.svg?style=flat-square" /></a>
   <a href="https://travis-ci.org/imshaikot/video-thumb-generator"><img src="https://api.travis-ci.org/imshaikot/video-thumb-generator.svg" /></a>
+
+  <a href="https://github.com/imshaikot/video-thumb-generator/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/imshaikot/video-thumb-generator.svg">
+  </a>
+  
+  <a href="http://standardjs.com">
+    <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" />
+  </a>
 </p>
 
 ## Demo
