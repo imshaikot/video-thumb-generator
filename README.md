@@ -10,7 +10,7 @@
   <a href="https://github.com/imshaikot/video-thumb-generator/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/imshaikot/video-thumb-generator.svg">
   </a>
-  
+
   <a href="http://standardjs.com">
     <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" />
   </a>
@@ -25,7 +25,7 @@
 ```bash
 $ npm install video-thumb-generator --save
 ```
-OR
+OR umd builds are also available
 ```
 <script src="https://unpkg.com/video-thumb-generator/umd/VideoToThumb.min.js"></script>
 ```
