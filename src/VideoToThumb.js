@@ -19,11 +19,11 @@ class VideoToThumb {
         if (Blob && _PRIVATE.get(this).resource instanceof Blob) {
           _PRIVATE.get(this).resource = URL.createObjectURL(resource);
         } else if (typeof this.resource !== 'string') {
-          return _PRIVATE.get(this).__errorCB('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
+          _PRIVATE.get(this).__errorCB('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
         }
       },
       mergeConfig: () => {
-        Object.keys(_PRIVATE.get(this).__configStack).forEach(key => {
+        Object.keys(_PRIVATE.get(this).__configStack).forEach((key) => {
           _PRIVATE.get(this).__settings[key] = _PRIVATE.get(this).__configStack[key];
         });
       },
@@ -71,7 +71,7 @@ class VideoToThumb {
     return this;
   }
   /**
-   * @param {*} callback 
+   * @param {*} callback
    */
   error(callback) {
     _PRIVATE.get(this).__errorCB = callback;
