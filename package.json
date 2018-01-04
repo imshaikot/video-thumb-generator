@@ -6,6 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/eslint ./src/",
     "start": "webpack-dev-server",
+    "webpack": "webpack ./src/index.js ./build/index.js ",
     "build": "babel ./src --stage 0 -d ./lib && webpack -p ./src/index.js ./umd/VideoToThumb.min.js",
     "postpublish": "git push origin master --follow-tags",
     "minor": "npm version minor && npm publish",
@@ -47,6 +48,7 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
+    "es6-object-assign": "^1.1.0",
     "weakmap-polyfill": "^2.0.0"
   }
 }

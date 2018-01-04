@@ -7,6 +7,7 @@
 /build
 
 index.html
+index.js
 lib/
 umd/
 

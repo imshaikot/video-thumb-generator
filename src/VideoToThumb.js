@@ -1,7 +1,9 @@
 import 'weakmap-polyfill';
+import { polyfill } from 'es6-object-assign';
 import Video from './video';
 
 const _PRIVATE = new WeakMap();
+polyfill();
 
 const OBJECT_URL_TYPE = 'objectURL';
 
@@ -17,9 +19,16 @@ class VideoToThumb {
         if (Blob && _PRIVATE.get(this).resource instanceof Blob) {
           _PRIVATE.get(this).resource = URL.createObjectURL(resource);
         } else if (typeof this.resource !== 'string') {
-          throw new Error('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
+          return _PRIVATE.get(this).__errorCB('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
         }
       },
+      mergeConfig: () => {
+        Object.keys(_PRIVATE.get(this).__configStack).forEach(key => {
+          _PRIVATE.get(this).__settings[key] = _PRIVATE.get(this).__configStack[key];
+        });
+      },
+      __configStack: {},
+      __errorCB: () => {},
       __settings: {
         xy: [0, 0],
         size: [320, 240],
@@ -30,7 +39,6 @@ class VideoToThumb {
   }
 
   load() {
-    _PRIVATE.get(this).prepareURL();
     return this;
   }
 
@@ -38,35 +46,44 @@ class VideoToThumb {
    * @param {*} val
    */
   xy(val = [0, 0]) {
-    _PRIVATE.get(this).__settings.xy = val;
+    _PRIVATE.get(this).__configStack.xy = val;
     return this;
   }
   /**
    * @param {*} val
    */
   size(val = [320, 240]) {
-    _PRIVATE.get(this).__settings.size = val;
+    _PRIVATE.get(this).__configStack.size = val;
     return this;
   }
   /**
    * @param {*} val
    */
   type(val = OBJECT_URL_TYPE) {
-    _PRIVATE.get(this).__settings.returnType = val;
+    _PRIVATE.get(this).__configStack.returnType = val;
     return this;
   }
   /**
    * @param {*} val
    */
   positions(val = [0]) {
-    _PRIVATE.get(this).__settings.skips = val;
+    _PRIVATE.get(this).__configStack.skips = val;
+    return this;
+  }
+  /**
+   * @param {*} callback 
+   */
+  error(callback) {
+    _PRIVATE.get(this).__errorCB = callback;
     return this;
   }
   /**
    * @param {*} successCB
    * @param {*} errorCB
    */
-  done(successCB, errorCB) {
+  done(successCB) {
+    _PRIVATE.get(this).prepareURL();
+    _PRIVATE.get(this).mergeConfig();
     const positions = [..._PRIVATE.get(this).__settings.skips];
     const video = new Video(_PRIVATE.get(this).resource);
     try {
@@ -85,9 +102,9 @@ class VideoToThumb {
               .then(reverseOrder);
           };
           return video.getSnaps(positions[0]).then(reverseOrder);
-        }).catch(errorCB);
+        }).catch(_PRIVATE.get(this).__errorCB);
     } catch (err) {
-      errorCB(err);
+      _PRIVATE.get(this).__errorCB(err);
     }
     return this;
   }

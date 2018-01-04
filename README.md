@@ -90,7 +90,21 @@ videoToThumb
 .positions([223, 555, 632, 104])
 .type('base64')
 ```
-And finally the `done(successCB, errorCB)` method. Remember the `load()` method to start and now `done` to end the process and your job done. This method accept two parameters `successCallback` and `errorCallback` and both are required.
+In order to track errors during the process (media, canvas or input) - this method will help you to track and this method accept a parameter of `errorCallback`
+<b>Caution</b>: Few Media Errors are still silent and won't reach the error callback (I'll work to get it done)
+```js
+const videoToThumb = new VideoToThumb(file.files[0]);
+videoToThumb
+.load()
+.xy([0, 0])
+.size([480, 360])
+.positions([223, 555, 632, 104])
+.type('base64')
+.error(function(err) {
+  console.log(JSON.stringify(err));
+})
+```
+And finally the `done(callback)` method. Remember the `load()` method to start and now `done` to end the process and your job done. This method accept a parameters `successCallback`.
 The success callback returns the successive screenshots that have been taken as an array.
 ```js
 const videoToThumb = new VideoToThumb(file.files[0]);
@@ -100,14 +114,15 @@ videoToThumb
 .size([480, 360])
 .positions([223, 555, 632, 104])
 .type('base64')
+.error(function(err) {
+  console.log(JSON.stringify(err));
+})
 .done(function(imgs) {
   imgs.forEach(function(img) {
     var elem = new Image();
     elem.src = img;
     document.body.appendChild(elem);
   })
-}, function(err) {
-  console.log(err);
 })
 ```
 
