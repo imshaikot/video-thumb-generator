@@ -27,7 +27,7 @@
       videoToThumb
       .load()
       .type(type)
-      .positions(positions.length < 1 ? [0] : positions)
+      .positions(positions.length < 1 ? [1] : positions)
       .xy(xy)
       .done(function(urls) {
         var editor = document.getElementById('editor');
@@ -205,7 +205,7 @@
     </button>
     <div id="editor">
     <div class="input-box">
-      <p style="font-size: 13px; color: grey; margin-top: 15px;">Positions: (in second [default: 0])</p>
+      <p style="font-size: 13px; color: grey; margin-top: 15px;">Positions: (in second [default: [1]])</p>
       <input id="positions-input" type="text" placeholder="Ex: 12, 55, 190, 32" />
     </div>
 
