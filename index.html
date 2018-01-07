@@ -19,7 +19,8 @@
         thumbArea.innerHTML = '<p class="error">Error: No video file found. Plaese choose a file.</p>';
         return;
       }
-      var positions = window['positions-input'].value.split(',').map(function(each) { return parseInt(each)});
+      var positions = window['positions-input'].value.split(',').map(function(each) { return parseInt(each)})
+      .filter(function(each) { return Number.isInteger(each) });
       var type = window['type-input'].value || 'objectURL';
       var xy = window['xy-input'].value ? window['xy-input'].value.split('x').map(function(each) { return parseInt(each)}) : [0, 0];
       var size = window['size-input'].value ? window['size-input'].value.split('x').map(function(each) { return parseInt(each)}) : [320, 240];
