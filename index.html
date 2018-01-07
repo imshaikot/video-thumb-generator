@@ -27,7 +27,7 @@
       videoToThumb
       .load()
       .type(type)
-      .positions(positions)
+      .positions(positions.length < 1 ? [0] : positions)
       .xy(xy)
       .done(function(urls) {
         var editor = document.getElementById('editor');
