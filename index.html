@@ -19,17 +19,25 @@
         thumbArea.innerHTML = '<p class="error">Error: No video file found. Plaese choose a file.</p>';
         return;
       }
-      var positions = window['positions-input'].value.split(',').map(function(each) { return parseInt(each)})
-      .filter(function(each) { return Number.isInteger(each) });
+      var positions = window['positions-input'].value.split(',').map(function(each) { return parseInt(each)}).filter(function(each) {
+        return Number.isInteger(each);
+      });
       var type = window['type-input'].value || 'objectURL';
       var xy = window['xy-input'].value ? window['xy-input'].value.split('x').map(function(each) { return parseInt(each)}) : [0, 0];
       var size = window['size-input'].value ? window['size-input'].value.split('x').map(function(each) { return parseInt(each)}) : [320, 240];
-      var videoToThumb = new VideoToThumb(tragetedFile);
+      var videoToThumb = new VideoToThumb.default(tragetedFile);
+      console.log(size)
       videoToThumb
       .load()
       .type(type)
+      .size(size)
       .positions(positions.length < 1 ? [1] : positions)
       .xy(xy)
+      .error(function(err) {
+        thumbArea.innerHTML = '<p class="error">Error: Critical error. Please check your inputs and here is the error message <br /> '+
+          err
+          +' </p>';
+      })
       .done(function(urls) {
         var editor = document.getElementById('editor');
         editor.style.opacity = '0';
@@ -55,10 +63,6 @@
           el.appendChild(href);
           thumbArea.appendChild(el);
         });
-      }, function(err) {
-        thumbArea.innerHTML = '<p class="error">Error: Critical error. Please check your inputs and here is the error message <br /> '+
-          JSON.stringify(err)
-          +' </p>';
       });
     }
   </script>
@@ -198,7 +202,7 @@
 </head>
 <body>
   <div class="main-box">
-    <h3 style="margin-bottom: 15px;">Please choose a media file to start capturing snapshots of video frame.</h3>
+    <h3 style="margin-bottom: 15px;">Please choose a media/video file in order to start capturing snapshots of respective video frames.</h3>
     <p style="margin-bottom: 20px; font-size: 13px;">You don't have to upload the video just select a file from your local system</p>
     <button id="rev-btn" style="width: 300px; background-color: rgb(0, 188, 212);" class="btn">
       <p id="chokra">Select a Video track<p>
@@ -206,7 +210,7 @@
     </button>
     <div id="editor">
     <div class="input-box">
-      <p style="font-size: 13px; color: grey; margin-top: 15px;">Positions: (in second [default: [1]])</p>
+      <p style="font-size: 13px; color: grey; margin-top: 15px;">Positions: (in second [default: 0])</p>
       <input id="positions-input" type="text" placeholder="Ex: 12, 55, 190, 32" />
     </div>
 
@@ -229,5 +233,6 @@
   </div>
 
   <div id="thumb-area"></div>
-<script type="text/javascript" src="index.js"></script></body>
+  <script src="index.js"></script>
+</body>
 </html>
