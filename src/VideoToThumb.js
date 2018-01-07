@@ -24,6 +24,13 @@ class VideoToThumb {
       },
       mergeConfig: () => {
         Object.keys(_PRIVATE.get(this).__configStack).forEach((key) => {
+          if (key !== 'returnType') {
+            if (!Array.isArray(_PRIVATE.get(this).__configStack[key])) throw new Error(`${key} was expecting an array to be its param`);
+            if (_PRIVATE.get(this).__configStack[key]
+              .map(each => parseInt(each, 10)).some(each => !Number.isInteger(each))) {
+              throw new Error(`${key} was expecting each of array item to be a number`);
+            }
+          }
           _PRIVATE.get(this).__settings[key] = _PRIVATE.get(this).__configStack[key];
         });
       },
@@ -82,11 +89,11 @@ class VideoToThumb {
    * @param {*} errorCB
    */
   done(successCB) {
-    _PRIVATE.get(this).prepareURL();
-    _PRIVATE.get(this).mergeConfig();
-    const positions = [..._PRIVATE.get(this).__settings.skips];
-    const video = new Video(_PRIVATE.get(this).resource);
     try {
+      _PRIVATE.get(this).prepareURL();
+      _PRIVATE.get(this).mergeConfig();
+      const positions = [..._PRIVATE.get(this).__settings.skips];
+      const video = new Video(_PRIVATE.get(this).resource);
       video
         .initialize(_PRIVATE.get(this).__settings)
         .then(() => {
