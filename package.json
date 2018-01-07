@@ -1,6 +1,6 @@
 {
   "name": "video-thumb-generator",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Generate thumbnails/screenshots from video (either from valid remote video URL or from local filesystem) on your HTML5 based webpage",
   "main": "lib/index.js",
   "scripts": {
