@@ -18,6 +18,8 @@ class VideoToThumb {
       prepareURL: () => {
         if (Blob && _PRIVATE.get(this).resource instanceof Blob) {
           _PRIVATE.get(this).resource = URL.createObjectURL(resource);
+        } else if (_PRIVATE.get(this).resource instanceof HTMLVideoElement) {
+          _PRIVATE.get(this).resource = document.cloneNode(_PRIVATE.get(this).resource);
         } else if (typeof this.resource !== 'string') {
           _PRIVATE.get(this).__errorCB('Resource reference was expecting whether a Blob/File Object or a string reference to a valid video URL');
         }
@@ -101,6 +103,7 @@ class VideoToThumb {
           const reverseOrder = () => {
             positions.shift();
             if (!positions.length) {
+              video.destroy();
               return successCB(video.thumbs.map(thumb => (_PRIVATE.get(this)
                 .__settings.returnType === OBJECT_URL_TYPE ?
                 URL.createObjectURL(thumb) : thumb)));

@@ -2,10 +2,14 @@ import Canvas from './canvas';
 
 export default class Video {
   constructor(uri) {
-    this.node = document.createElement('video');
-    this.node.setAttribute('src', uri);
-    this.node.setAttribute('muted', true);
-    this.node.setAttribute('controls', true);
+    if (uri instanceof HTMLVideoElement) {
+      this.node = uri;
+    } else {
+      this.node = document.createElement('video');
+      this.node.setAttribute('src', uri);
+      this.node.setAttribute('muted', true);
+      this.node.setAttribute('controls', true);
+    }
     this.node.style.display = 'none';
     this.node.width = 320;
     this.thumbs = [];

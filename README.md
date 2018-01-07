@@ -44,10 +44,12 @@ var VideoToThumb = require('video-thumb-generator');
 
 ## Example and API
 
-The constructor - you have to pass whether a local origin URL (such as http://mydomain.com/video.mp4) OR a HTML5 File Object.
-See the example below
+The constructor accepts 3 types of value as its parameter. 
+  1. HTML5 File Object (Ex. ```dataTransfer.files[0]```)
+  2. Any existing/active HTML Video element's DOM object/instance (Ex. ```document.getElementById('video')```)
+  3. Same origin video URL as string. (Ex. ```'http://mydomain.com/video.avi'```)
 ```js
-const videoToThumb = new VideoToThumb(file.files[0]); // OR you could pass instantiate new VideoToThumb('http://mydomain.com/video.mp4')
+const videoToThumb = new VideoToThumb(file.files[0]); // OR you could pass instantiate new VideoToThumb('http://mydomain.com/video.mp4') OR maybe new VideoToThumb(document.getElementById('video'))
 ```
 The instance of VideoToThumb contains a bunch of method (which are chained) but to get strated you have to call the `load()` method before any other chained method being called
 
